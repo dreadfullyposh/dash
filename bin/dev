@@ -1,0 +1,154 @@
+#!/usr/bin/env ruby
+require 'open3'
+
+class DevTool
+  MAIN_HELP_BANNER = <<HEREDOC
+Execute various commands within the developer environment
+
+Usage:
+  dev [options] [COMMAND] [ARGS...]"
+  dev -h|--help
+
+Options:
+  --verbose                 Show more output
+  -v, --version             Print version and exit
+
+Commands:
+  build              Build or rebuild services
+  help               Get help on a command
+  kill               Kill containers
+  logs               View output from containers
+  ps                 List containers
+  pull               Pulls service images
+  restart            Restart services
+  rm                 Remove stopped containers
+  run                Run a one-off command
+  start              Start services
+  stop               Stop services
+  up                 Create and start containers
+  machine            Manage the virtual machine
+  update             Update Dash developer environment
+  dash               Manage Dash services (nginx and dnsmasq)
+
+HEREDOC
+
+  PROXY_UNMODIFIED_TO_COMPOSE=%w{build kill logs ps pull restart rm start stop}
+  PROXY_MODIFIED=%w{up run}
+  OTHER_COMMANDS=%w{machine update dash}
+
+  def initialize(args)
+    if PROXY_UNMODIFIED_TO_COMPOSE.include?(args[0])
+      system(args.unshift("docker-compose").join(" "))
+    elsif PROXY_MODIFIED.include?(args[0])
+      send(args[0].to_sym, args)
+    elsif OTHER_COMMANDS.include?(args[0])
+      send(args.shift.to_sym, args)
+    else
+      puts MAIN_HELP_BANNER
+    end
+  end
+
+  def run(args)
+    args.insert(1, "--rm")
+    args.unshift("docker-compose")
+    system(args.join(" "))
+  end
+
+  def up(args)
+    dash(["up"])
+    args.insert(1, "-d")
+    args.unshift("docker-compose")
+    system(args.join(" "))
+  end
+
+  def machine(args)
+    if args.empty?
+      puts `docker-machine --help`.gsub(/Restart a machine/, "Restart a machine\n  resume                Resume a machine that has been paused by the host")
+    elsif args[0] == 'env'
+      output = run_with_timeout('docker-machine env dev', 2.0, 0.3)
+      if output.include? "Process timed out"
+        $stderr.puts "An error occured loading the dev configuration, probably because the VM is still booting. Try again later with dev machine env"
+      elsif output.include? "is not running"
+        $stderr.puts output.gsub(/docker-machine (\w*) dev/, "dev machine \\1")
+      else
+        puts output
+      end
+    elsif args[0] == 'resume'
+      system('VBoxManage startvm dev --type headless')
+    elsif args[0] == 'create'
+      system('docker-machine create --driver virtualbox dev')
+      system('docker-machine scp /usr/local/dev-env/docker/bootsync.sh dev:/tmp/bootsync.sh')
+      system('docker-machine ssh dev "sudo mv /tmp/bootsync.sh /var/lib/boot2docker/bootsync.sh"')
+      system('docker-machine restart dev')
+    else
+      args.push('dev') unless ["ls", "help", "active", "create", "scp"].include?(args[0])
+      args.unshift('docker-machine')
+      system(args.join(' '))
+    end
+  end
+
+  def update(args)
+    system('cd /usr/local/dev-env && git fetch && git reset --hard origin/master')
+    system('ansible-playbook /usr/local/dev-env/ansible/mac.yml -i 127.0.0.1, --ask-become-pass')
+  end
+
+  def dash(args)
+    if (args[0] == "up")
+      args.push("-d")
+    end
+    args.unshift("docker-compose", "-f /usr/local/dev-env/docker/dash.yml", "-p dash")
+    system(args.join(" "))
+  end
+
+  # H.T. https://gist.github.com/lpar/1032297
+  # Runs a specified shell command in a separate thread.
+  # If it exceeds the given timeout in seconds, kills it.
+  # Returns any output produced by the command (stdout or stderr) as a String.
+  # Uses select to wait up to the tick length (in seconds) between
+  # checks on the command's status
+  #
+  # If you've got a cleaner way of doing this, I'd be interested to see it.
+  # If you think you can do it with Ruby's Timeout module, think again.
+  #
+  # This has been modified to have smaller sleeps. It may struggle with
+  # commands that run for a very long time.
+  def run_with_timeout(command, timeout, tick)
+    output = ''
+    begin
+      # Start task in another thread, which spawns a process
+      stdin, stderrout, thread = Open3.popen2e(command)
+      # Get the pid of the spawned process
+      pid = thread[:pid]
+      start = Time.now
+
+      while (Time.now - start) < timeout and thread.alive?
+        # Wait up to `tick` seconds for output/error data
+        select([stderrout], nil, nil, tick)
+        # Try to read the data
+        begin
+          output << stderrout.read_nonblock(4096)
+        rescue IO::WaitReadable
+          # A read would block, so loop around for another select
+        rescue EOFError
+          # Command has completed, not really an error...
+          break
+        end
+      end
+      # Give Ruby time to clean up the other thread
+      sleep 0.1
+
+      if thread.alive?
+        # We need to kill the process, because killing the thread leaves
+        # the process alive but detached, annoyingly enough.
+        Process.kill("TERM", pid)
+        output = "Process timed out"
+      end
+    ensure
+      stdin.close if stdin
+      stderrout.close if stderrout
+    end
+    return output
+  end
+end
+
+DevTool.new(ARGV) if __FILE__==$0

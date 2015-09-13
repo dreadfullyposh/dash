@@ -1,0 +1,83 @@
+---
+- hosts:        127.0.0.1
+  connection:   local
+
+  vars:
+    dev_env_dir: /usr/local/dev-env
+
+  tasks:
+
+  - name: Check Sudo Password
+    command: ls
+    become: yes
+    become_method: sudo
+
+  - name: Tap Caskroom
+    homebrew_tap: tap=caskroom/cask
+
+  - name: Install Caskroom
+    homebrew: name=brew-cask state=latest
+
+  - name: Install Virtualbox
+    homebrew_cask: name=virtualbox state=present
+    environment:
+      HOMEBREW_CASK_OPTS: --appdir=/Applications
+
+  - name: Install Docker and Extras
+    homebrew: >
+      name={{item}}
+      state=latest
+    with_items:
+    - docker
+    - docker-machine
+    - docker-compose
+
+  - name: Create resolver directory
+    file: path=/etc/resolver state=directory mode=0755
+    become: yes
+    become_method: sudo
+
+  - name: Create dev resolver file at /etc/resolver/dev
+    file: >
+      src={{dev_env_dir}}/ansible/resolver-dev.conf
+      dest=/etc/resolver/dev
+      state=link
+      force=yes
+    become: yes
+    become_method: sudo
+
+  - name: Add NFS share to /etc/exports
+    lineinfile: >
+      dest=/etc/exports
+      line="{{item}}"
+      create=yes
+    with_items:
+    - '## Begin Dash Developer Environment ##'
+    - '\"/Users\" 192.168.99.100 -alldirs -mapall=0:80'
+    - '## End Dash Developer Environment ##'
+    become: yes
+    become_method: sudo
+    register: exports
+
+  - name: Restart nfsd
+    command: sudo nfsd restart
+    become: yes
+    become_method: sudo
+    when: exports.changed
+
+  - name: Add Docker Machine Environment to .zshrc
+    lineinfile: >
+      dest=~/.zshrc
+      line="source {{dev_env_dir}}/ansible/mac_profile"
+      create=yes
+    when: ansible_env.SHELL == "/bin/zsh"
+
+  - name: Add Docker Machine Environment to .bash_profile
+    lineinfile: >
+      dest=~/.bash_profile
+      line="source {{dev_env_dir}}/ansible/mac_profile"
+      create=yes
+    when: ansible_env.SHELL == "/bin/bash"
+
+  - name: Create Docker Machine
+    command: "{{dev_env_dir}}/bin/dev machine create creates=~/.docker/machine/machines/dev/config.json"

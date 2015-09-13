@@ -1,0 +1,4 @@
+# Dash Developer Environment Profile
+# This file should be shell-agnostic
+export PATH=$PATH:/usr/local/dev-env/bin
+eval "$(dev machine env)"
