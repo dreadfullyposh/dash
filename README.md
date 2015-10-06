@@ -6,7 +6,7 @@
 
 ## What is this for?
 
-`Dash` is a self-enclosed, mostly zero-configuration environment for developing applications at IFTTT. It assumes that you have not installed VirtualBox or Docker before.
+`Dash` is a self-contained, mostly zero-configuration environment for developing applications at IFTTT. It assumes that you have not installed VirtualBox or Docker before.
 
 ## The tl;dr Version
 
