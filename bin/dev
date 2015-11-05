@@ -81,7 +81,7 @@ HEREDOC
       system('docker-machine ssh dev "sudo mv /tmp/bootsync.sh /var/lib/boot2docker/bootsync.sh"')
       system('docker-machine restart dev')
     else
-      args.push('dev') unless ["ls", "help", "active", "create", "scp"].include?(args[0])
+      args.push('dev') unless !args[1].nil? or ["ls", "help", "active", "create", "scp"].include?(args[0])
       args.unshift('docker-machine')
       system(args.join(' '))
     end
