@@ -70,7 +70,7 @@
         dest: ~/.zshrc
         line: "source {{ dev_env_dir }}/ansible/mac_profile"
         create: yes
-      when: ansible_env.SHELL == "/bin/zsh"
+      when: ansible_env.SHELL == "/bin/zsh" or ansible_env.SHELL == "/usr/local/bin/zsh"
 
     - name: Add Docker Machine Environment to .bash_profile
       lineinfile:
