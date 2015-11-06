@@ -12,6 +12,9 @@
       become: yes
       become_method: sudo
 
+    - name: Update Homebrew
+      homebrew: update_homebrew=yes
+
     - name: Tap Caskroom
       homebrew_tap: tap=caskroom/cask
 
