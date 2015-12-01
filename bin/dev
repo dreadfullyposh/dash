@@ -76,7 +76,7 @@ HEREDOC
     elsif args[0] == 'resume'
       system('VBoxManage startvm dev --type headless')
     elsif args[0] == 'create'
-      system('docker-machine create --driver virtualbox dev')
+      system('docker-machine create --driver virtualbox --engine-opt dns=192.168.99.100 --engine-opt dns=8.8.8.8 --engine-opt dns=8.8.4.4 dev')
       system('docker-machine scp /usr/local/dev-env/docker/bootsync.sh dev:/tmp/bootsync.sh')
       system('docker-machine ssh dev "sudo mv /tmp/bootsync.sh /var/lib/boot2docker/bootsync.sh"')
       system('docker-machine restart dev')
