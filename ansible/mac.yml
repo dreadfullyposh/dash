@@ -50,14 +50,11 @@
       become_method: sudo
 
     - name: Add NFS share to /etc/exports
-      lineinfile:
+      blockinfile:
         dest: /etc/exports
-        line: "{{ item }}"
         create: yes
-      with_items:
-        - '## Begin Dash Developer Environment ##'
-        - '\"/Users\" 192.168.99.100 -alldirs -mapall=0:80'
-        - '## End Dash Developer Environment ##'
+        marker: "## {mark} Dash Developer Environment - ANSIBLE MANAGED BLOCK ##"
+        content: '/Users 192.168.99.100 -alldirs -mapall=0:80'
       become: yes
       become_method: sudo
       register: exports
