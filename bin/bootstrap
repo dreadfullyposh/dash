@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-#!/usr/bin/env bash
+# We need at least ansible 2.0 for blockinfile directive
+ANSIBLE_NEEDED="2.0"
 
 # Returns 1 if upgrade is needed
 # $1 - SYSTEM VERSION
@@ -54,7 +55,6 @@ if [[ $? != 0 ]] ; then
     brew install ansible
 else # Ansible needs to be at least 1.9
   ANSIBLE_VERSION=$(ansible --version | grep ansible | cut -d " " -f 2)
-  ANSIBLE_NEEDED="1.9"
   if update_needed $ANSIBLE_VERSION $ANSIBLE_NEEDED; then
     echo "Ansible is too old: $ANSIBLE_VERSION. We need >$ANSIBLE_NEEDED"
     echo "Updating ansible through homebrew..."
