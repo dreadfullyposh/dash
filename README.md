@@ -20,7 +20,7 @@
 
 **Host** or **host machine** refers to your physical computer.
 
-**Docker Machine**, **virtual machine**, **guest**, **guest machine**, **guest VM**, etc., all refer to the virtual machine that runs the Docker server and Docker contiainers.
+**Docker Machine**, **virtual machine**, **guest**, **guest machine**, **guest VM**, etc., all refer to the virtual machine that runs the Docker server and Docker containers.
 
 **Containers** or **Docker containers** refer to the individual services running inside of the virtual machine. Mac OS cannot natively run Docker containers (yet), so they have to be run inside of a VM.
 
@@ -112,7 +112,7 @@ Now the entire /Users directory gets shared into the Vagrant VM. You may then ne
 
 ## Contributing
 
-1. Fork it ( https://github.com/[my-github-username]/dash/fork )
+1. Fork it ( https://github.com/IFTTT/dash/fork )
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
