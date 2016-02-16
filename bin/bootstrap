@@ -1,5 +1,42 @@
 #!/usr/bin/env bash
 
+# We need at least ansible 2.0 for blockinfile directive
+ANSIBLE_NEEDED="2.0"
+
+# Returns 1 if upgrade is needed
+# $1 - SYSTEM VERSION
+# $2 - NEEDED VERSION
+update_needed () {
+    if [[ $1 == $2 ]]
+    then
+        return 0
+    fi
+    local IFS=.
+    local i ver1=($1) ver2=($2)
+    # fill empty fields in ver1 with zeros
+    for ((i=${#ver1[@]}; i<${#ver2[@]}; i++))
+    do
+        ver1[i]=0
+    done
+    for ((i=0; i<${#ver1[@]}; i++))
+    do
+        if [[ -z ${ver2[i]} ]]
+        then
+            # fill empty fields in ver2 with zeros
+            ver2[i]=0
+        fi
+        if ((10#${ver1[i]} > 10#${ver2[i]}))
+        then
+            return 1
+        fi
+        if ((10#${ver1[i]} < 10#${ver2[i]}))
+        then
+            return 0
+        fi
+    done
+    return 0
+}
+
 ## Install or Update Homebrew ##
 echo 'Installing or Updating Homebrew...'
 which -s brew
@@ -14,7 +51,18 @@ echo -e "\n\n"
 echo 'Installing or Updating Ansible...'
 which -s ansible-playbook
 if [[ $? != 0 ]] ; then
-	brew install ansible
+  echo "ansible installation..."
+    brew install ansible
+else # Ansible needs to be at least 1.9
+  ANSIBLE_VERSION=$(ansible --version | grep ansible | cut -d " " -f 2)
+  if update_needed $ANSIBLE_VERSION $ANSIBLE_NEEDED; then
+    echo "Ansible is too old: $ANSIBLE_VERSION. We need >$ANSIBLE_NEEDED"
+    echo "Updating ansible through homebrew..."
+    brew upgrade ansible
+    brew link --overwrite ansible
+  else
+    echo "Ansible version is $ANSIBLE_VERSION. Update not needed..."
+  fi
 fi
 echo -e "\n\n"
 
