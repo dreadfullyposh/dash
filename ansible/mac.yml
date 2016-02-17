@@ -80,4 +80,6 @@
       when: ansible_env.SHELL == "/bin/bash"
 
     - name: Create Docker Machine
-      command: "{{ dev_env_dir }}/bin/dev machine create creates=~/.docker/machine/machines/dev/config.json"
+      command: "{{ dev_env_dir }}/bin/dev machine create"
+      args:
+        creates: "~/.docker/machine/machines/dev/config.json"
