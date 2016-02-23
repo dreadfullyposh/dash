@@ -79,5 +79,12 @@
         create: yes
       when: ansible_env.SHELL == "/bin/bash"
 
+    - name: Add Docker Machine Environment to .config/fish/config.fish
+      lineinfile:
+        dest: ~/.config/fish/config.fish
+        line: "source {{ dev_env_dir }}/ansible/mac_profile.fish"
+        create: yes
+      when: ansible_env.SHELL == "/usr/local/bin/fish"
+
     - name: Create Docker Machine
       command: "{{ dev_env_dir }}/bin/dev machine create creates=~/.docker/machine/machines/dev/config.json"
