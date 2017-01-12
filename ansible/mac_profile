@@ -1,3 +1,0 @@
-# Dash Developer Environment Profile
-export PATH=$PATH:/usr/local/dev-env/bin
-eval "$(dev machine env)"

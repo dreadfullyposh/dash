@@ -1,0 +1,102 @@
+#!/usr/bin/env ruby
+require 'open3'
+require 'yaml'
+
+class DevTool
+  CURRENT_DIR = File.dirname(File.symlink?(__FILE__) ? File.readlink(__FILE__) : __FILE__)
+  CONFIG_FILE = ENV['DASH_CONFIG'] || File.join(CURRENT_DIR, "config.yml")
+  if File.file?(CONFIG_FILE)
+    CONFIG = YAML.load(File.open(CONFIG_FILE))
+  else
+    CONFIG = Hash.new({})
+  end
+  CONFIG["shared_projects"] ||= {}
+  CONFIG["shared_projects"]["dash"] = {
+    "help_text" => "Manage Dash services (nginx)",
+    "compose_file" => File.join(CURRENT_DIR, "dash.yml")
+  }
+
+  MAIN_HELP_BANNER = <<HEREDOC
+Execute various commands within the developer environment
+
+Usage:
+  dev [options] [COMMAND] [ARGS...]"
+  dev -h|--help
+
+Options:
+  --verbose                 Show more output
+  -v, --version             Print version and exit
+
+Docker Compose Commands:
+  build              Build or rebuild services
+  bundle             Generate a Docker bundle from the Compose file
+  config             Validate and view the compose file
+  create             Create services
+  down               Stop and remove containers, networks, images, and volumes
+  events             Receive real time events from containers
+  exec               Execute a command in a running container
+  help               Get help on a command
+  kill               Kill containers
+  logs               View output from containers
+  pause              Pause services
+  port               Print the public port for a port binding
+  ps                 List containers
+  pull               Pull service images
+  push               Push service images
+  restart            Restart services
+  rm                 Remove stopped containers
+  run                Run a one-off command
+  scale              Set number of containers for a service
+  start              Start services
+  stop               Stop services
+  unpause            Unpause services
+  up                 Create and start containers
+  version            Show the Docker-Compose version information
+
+Additonal Projects:
+#{CONFIG["shared_projects"].map{|k,v|"  " + k.to_s.ljust(19) + v["help_text"]}.join("\n")}
+
+HEREDOC
+  def initialize(args)
+    if args.empty? || (args[0] == "help" && args.length == 1)
+      help(args)
+      return
+    end
+
+    if CONFIG["shared_projects"].keys.include?(args[0])
+      project_name = args.shift
+      project_file = CONFIG["shared_projects"][project_name]["compose_file"]
+    end
+
+    args = modify(args)
+
+    if project_name && project_file
+      args.unshift("-f", project_file, "-p", project_name)
+    elsif args[0] == "up"
+      DevTool.new(["dash", "up"])
+    end
+
+    run(args)
+  end
+
+  def help(args)
+    puts MAIN_HELP_BANNER
+  end
+
+  def modify(args)
+    case args[0]
+      when "run"
+        args.insert(1, "--rm") unless args.include?("--rm")
+      when "up"
+        args.insert(1, "-d") unless args.include?("-d")
+    end
+    args
+  end
+
+  def run(args)
+    cmd = args.unshift("docker-compose").join(" ")
+    system(cmd)
+  end
+end
+
+DevTool.new(ARGV) if __FILE__==$0
