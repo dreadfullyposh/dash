@@ -6,7 +6,7 @@
 
 ## What is this for?
 
-`Dash` is a simpple Docker Compose wrapper command used in developing applications at IFTTT.
+`Dash` is a simple Docker Compose wrapper command used in developing applications at IFTTT.
 
 ## The tl;dr Version
 
