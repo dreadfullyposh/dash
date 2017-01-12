@@ -1,0 +1,4 @@
+shared_projects:
+  subsystem:
+    help_text: "Manage subsystem containers (kafka, zookeeper, etc)"
+    compose_file: /Users/username/subsystem/docker-compose.yml
