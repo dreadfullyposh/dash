@@ -2,3 +2,6 @@
 config.yml
 certs/*.key
 certs/*.crt
+
+data/*
+!data/.gitkeep
