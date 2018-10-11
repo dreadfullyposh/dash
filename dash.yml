@@ -1,9 +1,78 @@
-version: "2"
+version: '3'
+
 services:
+
+  # Nginx Proxy
   nginx:
-    image: jwilder/nginx-proxy
+    build: ./docker/nginx
     ports:
       - "80:80"
+      - "443:443"
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ./certs:/etc/nginx/certs
     restart: always
+
+  # DNSMasq Server
+  dnsmasq:
+    image: andyshinn/dnsmasq
+    ports:
+      - "127.0.0.1:53:53/tcp"
+      - "127.0.0.1:53:53/udp"
+    cap_add:
+      - NET_ADMIN
+    # Configure TLD DNSMasq should respond to
+    # --address=/test/127.0.0.1 will respond to *.test  
+    command: --address=/test/127.0.0.1
+    restart: always
+
+  # MySQL
+  # Point web servers to mysql for MySQL server
+  # Username: root
+  # Password: root
+  mysql:
+    image: mysql:5.6
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+    volumes:
+      - ./data/mysql:/var/lib/mysql:rw
+    ports:
+      - "3306:3306"
+    restart: always  
+
+  # MailHog
+  # Point web servers to mailhog:1025 for SMTP Server
+  # Visit https://mailhog.dev.test to view MailHog in browser
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - "1025"
+      - "8025"
+    restart: always
+    depends_on: 
+      - nginx
+    environment:
+      VIRTUAL_HOST: mailhog.dev.test
+      VIRTUAL_PORT: 8025
+
+  # PHPMyAdmin
+  # Visit https://phpmyadmin.dev.test to view MailHog in browser
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - 80
+    restart: always
+    depends_on: 
+      - nginx
+      - mysql
+    environment:
+      VIRTUAL_HOST: phpmyadmin.dev.test
+      PMA_HOST: mysql
+      PMA_USER: root
+      PMA_PASSWORD: root
+
+# Configure the Docker network to use
+networks:
+  default:
+    external:
+      name: dash

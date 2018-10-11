@@ -1,1 +1,4 @@
+.DS_Store
 config.yml
+certs/*.key
+certs/*.crt

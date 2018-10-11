@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+  # Start by defining your "web" container block
+  web:
+
+    # You can use an image from Docker Hub (or a custom registry of your choosing)
+    image: webdevops/php-apache:latest
+
+    # or build a custom Dockerfile
+    # build: ./path/to/dockerfile
+
+    # Make sure to expose port 80 so the nginx proxy will see your container. Do
+    # not try to bind to port 80 on the host, as this port is already in use.
+    ports:
+      - 80
+
+    environment:
+      WEB_DOCUMENT_ROOT: /app/public
+
+      # The VIRTUAL_HOST environemnt variable will define the URL your site is
+      # accessible at. This was defined when you provisioned the site.
+      VIRTUAL_HOST: projectname.dev.test
+
+      # HTTPS_METHOD=noredirect serve the site from both http and https without any redirect
+      # HTTPS_METHOD=redirect redirect all traffic to https, also enables HSTS (default)
+      # HTTPS_METHOD=nohttp disable the non-SSL site entirely
+
+    volumes:
+      - ./:/app
+
+# Your project docker-compose.yml must be on the same network as your dash.
+networks:
+  default:
+    external:
+      name: dash    
