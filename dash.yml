@@ -46,8 +46,9 @@ services:
   mailhog:
     image: mailhog/mailhog
     ports:
-      - "1025"
-      - "8025"
+      - "1025:1025"
+    expose:
+      - 8025  
     restart: always
     depends_on: 
       - nginx
@@ -59,7 +60,7 @@ services:
   # Visit https://phpmyadmin.dev.test to view MailHog in browser
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
-    ports:
+    expose:
       - 80
     restart: always
     depends_on: 

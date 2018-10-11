@@ -12,7 +12,7 @@ services:
 
     # Make sure to expose port 80 so the nginx proxy will see your container. Do
     # not try to bind to port 80 on the host, as this port is already in use.
-    ports:
+    expose:
       - 80
 
     environment:
@@ -22,9 +22,9 @@ services:
       # accessible at. This was defined when you provisioned the site.
       VIRTUAL_HOST: projectname.dev.test
 
-      # HTTPS_METHOD=noredirect serve the site from both http and https without any redirect
-      # HTTPS_METHOD=redirect redirect all traffic to https, also enables HSTS (default)
-      # HTTPS_METHOD=nohttp disable the non-SSL site entirely
+      # HTTPS_METHOD: noredirect # serve the site from both http and https without any redirect
+      # HTTPS_METHOD: redirect # redirect all traffic to https, also enables HSTS (default)
+      # HTTPS_METHOD: nohttp # disable the non-SSL site entirely
 
     volumes:
       - ./:/app
