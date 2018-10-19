@@ -13,18 +13,19 @@ This repository was presented at ExpressionEngine Conference 2018 by Jeremy Gimb
 The slides from the presentation can be found here: <url to be added following presentation>
 
 ## Dash Directory Structure
+
     .
-    ├── certs                    		# Stores certificate generation scripts as well as generated certificates
-    │   ├── generatecertificate.sh      # Script for generating wildcard self-signed certificate
-    │   ├── openssl.cnf         		# Config file used by generatecertificate.sh
-    ├── data 							# Data storage for persistant volumes (MySQL data, etc)
-	├── docker 							# Stores custom Dockerfiles for use within the Dash services
-    │   ├── nginx      					# Stores Dockerfile for nginx-proxy
+    ├── certs 						# Stores certificate generation scripts as well as generated certificates
+    │   ├── generatecertificate.sh 	# Script for generating wildcard self-signed certificate
+    │   ├── openssl.cnf 			# Config file used by generatecertificate.sh
+    ├── data 						# Data storage for persistant volumes (MySQL data, etc)
+	├── docker 						# Stores custom Dockerfiles for use within the Dash services
+    │   ├── nginx 					# Stores Dockerfile for nginx-proxy
     │   │   ├── Dockerfile
-	├── example 						# Stores example docker-compose.yml file for projects
+	├── example 					# Stores example docker-compose.yml file for projects
     │   ├── docker-compose.yml
-	├── config.sample.yml      			# Sample config for customizing Dash with additional central service stacks
-	└── dash.yml     					# Docker compose file for configuring the Dash services
+	├── config.sample.yml 			# Sample config for customizing Dash with additional central service stacks
+	└── dash.yml 	s  				# Docker compose file for configuring the Dash services
 
 ## Installation
 
