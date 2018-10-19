@@ -2,19 +2,23 @@
 
 ## What is Dash
 
-`Dash` is a simple Docker Compose wrapper command used for managing a Docker-based local development environment. This is a fork of https://github.com/IFTTT/dash.
+Dash is a simple Docker Compose wrapper command used for managing a Docker-based local development environment. 
+
+This is a fork of https://github.com/IFTTT/dash, originally created by IFTTT.
 
 Dash provides a centralized set of services for an Nginx reverse proxy server, DNSMasq, MailHog and MySQL.
 
-`Dash` was presented at ExpressionEngine Conference 2018 by Jeremy Gimbel. Slides from the presentation can be found here: xxx
+This repository was presented at ExpressionEngine Conference 2018 by Jeremy Gimbel as part of a session entitled *A Docker-based Development Environment Even I Can Understand*
+
+The slides from the presentation can be found here: <url to be added following presentation>
 
 ## Installation
 
-`Dash` and the associated installation instructions have been created for use on Mac OS X. While components of it should work correctly on other operating systems, your mileage may vary.
+Dash and the associated installation instructions have been created for use on Mac OS X. While Docker and the Dash script should work correctly on other operating systems, your mileage may vary and some tweaking may be needed.
 
 - Step 1: Install Docker
 - Step 2: Clone this project to a directory of your choice git clone git@github.com:dreadfullyposh/dash
-- Step 3: Add the Dash directory to your path.
+- Step 3: Add the Dash directory (that you just cloned) to your path.
 - Step 4: Create a Docker network for your Dash setup by running `docker network create dash`
 - Step 5: Configure your Mac to resolve *.test domains via the DNSMasq server included with Dash:
   1. Create a `resolver` directory in `/etc`. If it already exists, that's fine.
@@ -39,6 +43,9 @@ After generating your certificates, Dash will automatically pick them up. You wi
 
 ## Workflow
 
-- The source code running inside a project container is loaded from the directory on your hard drive. You can use text editors and Git clients on the host machines, and shouldn't need to work in the guest machine or the container.
-- You should not need to run any application code directly from your host machine. Try to force yourself to find a containerized way of accomplishing things.
+- With the Dash directory added to your path, you can now access the `dev` command from anywhere on your machine. `dev` is simply a wrapper for `docker-compose` 
+- By default `dev commandname` will operate on the docker-compose.yml file in the current directory or above in the directory tree. Using `dev dash commandname` will operate on the Dash services.
+- The source code running inside a project container is syncronized via a volume in docker-compose.yml. Normally the project repository directory on your hard drive gets mapped to a directory one level above the document root in your container. 
+- You can use text editors and Git clients on the host machine, and shouldn't need to SSH in to work in the Docker machine or the container. If you do, you're probably doing something wrong.
+- That said, you should not need to run any application code directly from your host machine. Try to force yourself to find a containerized way of accomplishing things. This includes running `composer` or `npm`
 - Your SSH identity from the host machine will be forwarded into the guest machine.
