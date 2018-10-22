@@ -74,15 +74,15 @@ Since MySQL is running on its own container in the Dash, accessing it is a littl
 
 From your host machine, using Sequel Pro, the mysql command line client or any other tool:
 
-**Hostname:** 127.0.0.1 (be sure you're connecting via network not socket)
-**Username:** root
-**Password:** root
+- **Hostname:** 127.0.0.1 (be sure you're connecting via network not socket)
+- **Username:** root
+- **Password:** root
 
 From any other container running in Docker:
 
-**Hostname:** mysql (this is the name of the MySQL service in dash.yml)
-**Username:** root
-**Password:** root
+- **Hostname:** mysql (this is the name of the MySQL service in dash.yml)
+- **Username:** root
+- **Password:** root
 
 ### MailHog
 
@@ -92,5 +92,13 @@ When Dash is running, the MailHog control panel is configured to be accessible a
 
 Configure your applications to use MailHog as their SMTP server:
 
-**Hostname:** mailhog
-**Port Number:** 1025
+- **Hostname:** mailhog
+- **Port Number:** 1025
+
+### PHPMyAdmin
+
+PHPMyAdmin is a web-based MySQL client.
+
+PHPMyAdmin is accessible at: https://phpmyadmin.dev.test (http if you haven't configured SSL)
+
+The login credentials are already set, so you should not need to login when you open PHPMyAdmin. If you do change the root password for MySQL, make sure you also update it for the PHPMyAdmin container as well.
