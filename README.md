@@ -65,3 +65,32 @@ After generating your certificates, Dash will automatically pick them up. You wi
 - You can use text editors and Git clients on the host machine, and shouldn't need to SSH in to work in the Docker machine or the container. If you do, you're probably doing something wrong.
 - That said, you should not need to run any application code directly from your host machine. Try to force yourself to find a containerized way of accomplishing things. This includes running `composer` or `npm`
 - Your SSH identity from the host machine will be forwarded into the guest machine.
+
+## Dash Shared Services
+
+### MySQL
+
+Since MySQL is running on its own container in the Dash, accessing it is a little different than on a traditional local development environment.
+
+From your host machine, using Sequel Pro, the mysql command line client or any other tool:
+
+**Hostname:** 127.0.0.1 (be sure you're connecting via network not socket)
+**Username:** root
+**Password:** root
+
+From any other container running in Docker:
+
+**Hostname:** mysql (this is the name of the MySQL service in dash.yml)
+**Username:** root
+**Password:** root
+
+### MailHog
+
+MailHog is an email testing tool that acts as an SMTP server. Your applications can then send email through MailHog instead of a real SMTP server, and you can access any sent messages from the MailHog control panel.
+
+When Dash is running, the MailHog control panel is configured to be accessible at: https://mailhog.dev.test (http if you haven't configured SSL)
+
+Configure your applications to use MailHog as their SMTP server:
+
+**Hostname:** mailhog
+**Port Number:** 1025
