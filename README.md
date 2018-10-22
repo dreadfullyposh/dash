@@ -16,17 +16,17 @@ The slides from the presentation can be found here: <url to be added following p
 Explanation of the files in this repository.
 
     .
-    ├── certs 				# Stores certificate generation scripts as well as generated certificates
+    ├── certs			# Stores certificate generation scripts as well as generated certificates
     │   ├── generatecertificate.sh 	# Script for generating wildcard self-signed certificate
     │   ├── openssl.cnf 		# Config file used by generatecertificate.sh
-    ├── data 				# Data storage for persistant volumes (MySQL data, etc)
+    ├── data 			# Data storage for persistant volumes (MySQL data, etc)
 	├── docker 			# Stores custom Dockerfiles for use within the Dash services
     │   ├── nginx 			# Stores Dockerfile for nginx-proxy
     │   │   ├── Dockerfile
 	├── example 			# Stores example docker-compose.yml file for projects
     │   ├── docker-compose.yml
 	├── config.sample.yml 		# Sample config for customizing Dash with additional central service stacks
-	└── dash.yml 	s  		# Docker compose file for configuring the Dash services
+	└── dash.yml			# Docker compose file for configuring the Dash services
 
 ## Installation
 
