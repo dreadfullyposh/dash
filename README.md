@@ -10,7 +10,7 @@ Dash provides a centralized set of services for an Nginx reverse proxy server, D
 
 This repository was presented at ExpressionEngine Conference 2018 by Jeremy Gimbel as part of a session entitled *A Docker-based Development Environment Even I Can Understand*
 
-The slides from the presentation can be found here: <url to be added following presentation>
+The slides from the presentation can be found here: https://www.slideshare.net/JeremyGimbel/a-dockerbased-development-environment-even-i-can-understand-120725992
 
 ## Dash Directory Structure
 Explanation of the files in this repository.
