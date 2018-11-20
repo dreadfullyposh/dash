@@ -1,5 +1,5 @@
 NAME=test
-all: ctreate-docker-network create-resolver-dir add-test-resolver configure-test-resolver
+all: create-docker-network create-resolver-dir add-test-resolver configure-test-resolver
 
 # Use this command to add another resolver
 # `make add-resolver NAME=testdomain`
