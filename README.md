@@ -33,7 +33,7 @@ Explanation of the files in this repository.
 Dash and the associated installation instructions have been created for use on Mac OS X. While Docker and the Dash script should work correctly on other operating systems, your mileage may vary and some tweaking may be needed.
 
 - Step 1: Install Docker
-- Step 2: Clone this project to a directory of your choice git clone git@github.com:dreadfullyposh/dash
+- Step 2: Clone this project to a directory of your choice `git clone git@github.com:dreadfullyposh/dash`
 - Step 3: Add the Dash directory (that you just cloned) to your path.
 - Step 4: Create a Docker network for your Dash setup by running `docker network create dash`
 - Step 5: Configure your Mac to resolve *.test domains via the DNSMasq server included with Dash:
