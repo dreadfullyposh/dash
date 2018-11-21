@@ -33,14 +33,15 @@ Explanation of the files in this repository.
 Dash and the associated installation instructions have been created for use on Mac OS X. While Docker and the Dash script should work correctly on other operating systems, your mileage may vary and some tweaking may be needed.
 
 - Step 1: Install Docker
-- Step 2: Clone this project to a directory of your choice git clone git@github.com:dreadfullyposh/dash
+- Step 2: Clone this project to a directory of your choice `git clone git@github.com:dreadfullyposh/dash`
 - Step 3: Add the Dash directory (that you just cloned) to your path.
-- Step 4: Create a Docker network for your Dash setup by running `docker network create dash`
-- Step 5: Configure your Mac to resolve *.test domains via the DNSMasq server included with Dash:
-  1. Create a `resolver` directory in `/etc`. If it already exists, that's fine.
-  2. Add a file named `test` in that directory with your text editor.
-  3. Open that file and type `nameserver 127.0.0.1`. Save.
-  4. You will have to restart your Mac for the resolver to take effect.
+- Step 4: Run `make` to configure the following. below will create a resolver for the domain test, if you like to use a diffirent domain pass NAME in the command: `make NAME=testdomain`
+    - Create a Docker network for your Dash setup by running `docker network create dash`
+    - Configure your Mac to resolve *.test domains via the DNSMasq server included with Dash:
+        1. Create a `resolver` directory in `/etc`. If it does not already exist
+        2. Add a file named `test` in that directory.
+        3. Append `nameserver 127.0.0.1` to that file (`/etc/resolver/test`)
+- Step 5. You will have to restart your Mac for the resolver to take effect.
 - Step 6: Run `dev dash up`. You should see several containers start up in the terminal.
 
 ## SSL
@@ -65,6 +66,11 @@ After generating your certificates, Dash will automatically pick them up. You wi
 - You can use text editors and Git clients on the host machine, and shouldn't need to SSH in to work in the Docker machine or the container. If you do, you're probably doing something wrong.
 - That said, you should not need to run any application code directly from your host machine. Try to force yourself to find a containerized way of accomplishing things. This includes running `composer` or `npm`
 - Your SSH identity from the host machine will be forwarded into the guest machine.
+
+## Managing Test Domains
+More than one test domain can be added:
+- to add another run: `make add-resolver NAME=domainname`
+- to remove `make add-resolver NAME=domainname`
 
 ## Dash Shared Services
 
