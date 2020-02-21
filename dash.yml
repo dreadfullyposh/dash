@@ -13,18 +13,19 @@ services:
       - ./certs:/etc/nginx/certs
     restart: always
 
-  # DNSMasq Server
-  dnsmasq:
-    image: andyshinn/dnsmasq
-    ports:
-      - "127.0.0.1:53:53/tcp"
-      - "127.0.0.1:53:53/udp"
-    cap_add:
-      - NET_ADMIN
+  # DNSMasq Server - Optional
+  #dnsmasq:
+  #  image: andyshinn/dnsmasq
+  #  ports:
+  #    - "127.0.0.1:53:53/tcp"
+  #    - "127.0.0.1:53:53/udp"
+  #  cap_add:
+  #    - NET_ADMIN
     # Configure TLD DNSMasq should respond to
-    # --address=/test/127.0.0.1 will respond to *.test  
-    command: --address=/test/127.0.0.1
-    restart: always
+    # --address=/test/127.0.0.1 will respond to *.test TLD. Change
+    # based on your preferences 
+  #  command: --address=/test/127.0.0.1
+  #  restart: always
 
   # MySQL
   # Point web servers to mysql for MySQL server
@@ -53,7 +54,7 @@ services:
     depends_on: 
       - nginx
     environment:
-      VIRTUAL_HOST: mailhog.dev.test
+      VIRTUAL_HOST: mailhog.localtest.me
       VIRTUAL_PORT: 8025
 
   # PHPMyAdmin
@@ -67,7 +68,7 @@ services:
       - nginx
       - mysql
     environment:
-      VIRTUAL_HOST: phpmyadmin.dev.test
+      VIRTUAL_HOST: phpmyadmin.localtest.me
       PMA_HOST: mysql
       PMA_USER: root
       PMA_PASSWORD: root

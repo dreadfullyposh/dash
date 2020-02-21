@@ -3,11 +3,11 @@
   x509_extensions = v3_req
   prompt = no
   [req_distinguished_name]
-  CN = *.dev.test
+  CN = *.localtest.me
   [v3_req]
-  keyUsage = keyEncipherment, dataEncipherment
+  keyUsage = nonRepudiation, keyEncipherment, dataEncipherment
   extendedKeyUsage = serverAuth
   subjectAltName = @alt_names
   [alt_names]
-  DNS.1 = *.dev.test
-  DNS.2 = dev.test
+  DNS.1 = *.localtest.me
+  DNS.2 = localtest.me
