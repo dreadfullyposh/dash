@@ -24,16 +24,16 @@ Explanation of the files in this repository.
     ├── certs           # Stores certificates
     ├── data            # Data storage for persistant volumes (MySQL data, etc)
     ├── docker          # Stores custom Dockerfiles for use within the Dash services
-    │   ├── nginx           # Stores Dockerfile and conf files for nginx-proxy
+    │   ├── nginx       # Stores Dockerfile and conf files for nginx-proxy
     │   │   ├── Dockerfile
-    ├── example             # Stores example docker-compose.yml file for projects
-    │   ├── public                  # Example document root, contains simple index.php for demo purposes
+    ├── example         # Stores example docker-compose.yml file for projects
+    │   ├── public      # Example document root, contains simple index.php for demo purposes
     │   ├── docker-compose.yml
     ├── config.sample.yml       # Sample config for customizing Dash with additional central service stacks
     ├── dash.yml                # Docker compose file for configuring the Dash services
     ├── dev                     # Script for controlling dash
-    ├── generatecertificate.sh      # Script for generating wildcard self-signed certificate
-    └── openssl.cnf            # Config file used by generatecertificate.sh
+    ├── generatecertificate.sh  # Script for generating wildcard self-signed certificate
+    └── openssl.cnf             # Config file used by generatecertificate.sh
 
 ## Installation
 
