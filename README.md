@@ -70,7 +70,7 @@ After generating your certificates, Dash will automatically pick them up. You wi
 - That said, you should not need to run any application code directly from your host machine. Try to force yourself to find a containerized way of accomplishing things. This includes running `composer` or `npm`
 - Your SSH identity from the host machine will be forwarded into the guest machine.
 
-## Test Domains
+## Changing Domains
 
 By default we use `*.localtest.me` which is a publicly-available domain that always resolves to `127.0.0.1` (https://weblogs.asp.net/owscott/introducing-testing-domain-localtest-me).
 
@@ -81,6 +81,9 @@ Then, configure your Mac to resolve `*.yourtld` domains via the DNSMasq server i
     2. Add a text file named `yourtld` in that directory.
     3. Append `nameserver 127.0.0.1` to that file (`/etc/resolver/yourtld`)
     4. Restart your Mac
+
+After changing domains, you'll need to adjust the `./generatecertificate.sh` script and `openssl.cnf` to match your new domain and re-run the script to re-generate your certificates.    
+    
 
 ## Dash Shared Services
 
